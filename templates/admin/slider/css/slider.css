@@ -1,0 +1,21 @@
+#wpfooter {
+    display: none;
+}
+.remove-image{
+    float: right;
+    margin-left: -3em;
+    z-index: 999999999;
+    position: relative;
+}
+.image-preview-wrapper{
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+}
+.slider-wrapper {
+    border: 1px solid black;
+    padding: 1em;
+    margin-top: 1em;
+}
+.image-custom-link-input{
+    width: 100%;
+}

@@ -1,0 +1,36 @@
+.inputWrapper  {
+    display: flex;
+    width:40%;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.inputWrapperTwo {
+    justify-content:flex-start;
+}
+
+.inputWrapperTwo div:nth-child(1) {
+    margin-right:3em;
+}
+.stickerContainer {
+    margin-bottom: 2em;
+}
+.inputWrapper input, .inputWrapper select{
+    display: block;
+    width:100%;
+    align-self:flex-end;
+    line-height:normal;
+}
+
+.inputWrapper div:nth-child(1) {
+    width:20%;
+}
+.inputWrapper div:nth-child(2) {
+    width:20%;
+}
+.inputWrapper div:nth-child(3) {
+    width:40%;
+}
+.inputWrapper div:nth-child(3) input {
+    width: 30%;
+}

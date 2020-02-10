@@ -1,0 +1,20 @@
+return [
+   'settingPage' => [
+	    'pageTitle' => 'The text to be displayed in the title tags of the page when the menu is selected.',
+	    'menuTitle' => 'The text to be used for the menu.',
+	    'capability' => 'The capability required for this menu to be displayed to the user. see https://wordpress.org/support/article/roles-and-capabilities/',
+	    'menuSlug' => 'The slug name to refer to this menu by (should be unique for this menu).',
+	    'template' => 'Template name inside config > settingsPages used to display option page'
+	],
+	'registerSettings' => [
+    		'optionGroup' => 'A settings group name. Use this when using',
+    		'options' => [
+    		'optionName' => [
+    		    'type' => The type of data associated with this setting.
+                           Valid values are 'string', 'boolean', 'integer', and 'number'.,
+                'description'       => A description of the data attached to this setting.,
+                'sanitize_callback' =>  A callback function that sanitizes the option's value.
+                'show_in_rest'      =>  Whether data associated with this setting should be included in the REST API.
+            ] Default values are string, '' , null , false
+    ],
+];
