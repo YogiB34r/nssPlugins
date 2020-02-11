@@ -14,9 +14,9 @@ $args = array(
     'limit' => $itemLimit
 );
 $products = wc_get_products( $args );
+$stickers = new \GfPluginsCore\ProductStickers();
 ?>
 <div id="<?php echo $random_id; ?>" class="gf-product-slider">
-
     <div class="row gf-product-slider__header gf-product-slider__header--without-tabs">
         <h3 class="gf-product-slider__header__title"><a href="<?= $categoryLink ?>"><?= $sliderTitle ?></a></h3>
         <div class="gf-product-slider__header__controls gf-product-slider__header__controls--without-tabs">
@@ -31,14 +31,13 @@ $products = wc_get_products( $args );
     <div class="slider-inner without-tabs">
         <?php
 
-
         /** @var WC_Product $product */
-        foreach ($products as $product) :?>
+        foreach ($products as $product):?>
             <div class="slider-item">
                 <a href="<?=$product->get_permalink()?>" title="<?=$product->get_name()?>">
-                    <?= add_stickers_to_products_on_sale('', $product->get_id()); ?>
+                    <?= $stickers->addStickerToSaleProducts('',  $product->get_id()); ?>
                     <?php if (has_post_thumbnail($product->get_id())) echo get_the_post_thumbnail($product->get_id(),[150, 150]); else echo '<img src="' . wc_placeholder_img_src() . '" alt="Placeholder" width="300px" height="300px" />'; ?>
-                    <h5><?php $product->get_name() ?></h5>
+                    <h5><?= $product->get_name() ?></h5>
                     <span class="price"><?php echo $product->get_price_html(); ?></span>
                 </a>
                 <?php woocommerce_template_loop_add_to_cart($product); ?>

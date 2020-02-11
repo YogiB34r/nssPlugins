@@ -60,12 +60,7 @@ class CategoryProductSlider extends \WP_Widget
     {
         $key = 'product-slider-without-tabs#' . serialize($instance);
         $html = $this->cache->redis->get($key);
-
-
         $html = false;
-
-
-
         if ($html === false) {
             ob_start();
             GfShopThemePlugins::getTemplatePartials('view', 'categoryProductSlider', 'categoryProductSlider', ['slider' => $instance['sliderSelect']]);
