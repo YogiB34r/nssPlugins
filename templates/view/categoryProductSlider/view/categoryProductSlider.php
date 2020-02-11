@@ -1,4 +1,5 @@
 <?php
+global $stickers;
 $random_id = rand();
 $sliderTitle = $data['slider'];
 $options = get_option('gf_category_product_slider_options')['sliders'][$sliderTitle];
@@ -9,12 +10,13 @@ $itemLimit = 16;
 if (wp_is_mobile()) {
     $itemLimit = 10;
 }
+
 $args = array(
     'include' => $productIds,
+    'orderby' => 'include',
     'limit' => $itemLimit
 );
 $products = wc_get_products( $args );
-$stickers = new \GfPluginsCore\ProductStickers();
 ?>
 <div id="<?php echo $random_id; ?>" class="gf-product-slider">
     <div class="row gf-product-slider__header gf-product-slider__header--without-tabs">
