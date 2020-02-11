@@ -67,9 +67,9 @@ $cats = $data['categories'];
 				$title = $product->get_title();
 				echo '
                 <li class="list-inline-item">
-                 <h5 class="product-title">'.$product->get_title().'</h5>
+                 <p class="product-title">'.$product->get_title().'</p>
                     <div class="image-preview-wrapper">
-                        <img class="image-preview" src="' . $imageSrc . '" alt="" height="200px" width="200px">
+                        <img class="image-preview" src="' . $imageSrc . '" alt="" height="100px" width="100px">
                         <button class="remove-image btn btn-danger">&times</button>
                     </div>
                           <input class="product-id-input" type="hidden" value="'.$product->get_id().'"
