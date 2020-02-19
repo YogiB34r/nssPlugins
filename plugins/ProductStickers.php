@@ -40,9 +40,9 @@ class ProductStickers
     {
         if (!is_object($product)) $product = wc_get_product(get_the_ID());
 
-        if ($this->options['image_position_new_option'] === 'left') {
+        if ($this->options['image_position_new'] === 'left') {
             $class = 'gf-sticker--left';
-        } elseif ($this->options['image_position_new_option'] === 'center') {
+        } elseif ($this->options['image_position_new'] === 'center') {
             $class = 'gf-sticker--center';
         } else {
             $class = 'gf-sticker--right';
@@ -51,7 +51,7 @@ class ProductStickers
         $sale_sticker_to = (int)get_post_meta($product->get_id(), 'sale_sticker_to', true);
         $postdatestamp = strtotime(get_the_time('Y-m-d'));
         $newness = 15;
-        if ((time() - (60 * 60 * 24 * $newness)) < $postdatestamp && ($sale_sticker_to == 0) && !gf_is_product_sold_out($product)) {
+        if ((time() - (60 * 60 * 24 * $newness)) < $postdatestamp && ($sale_sticker_to == 0) && $this->isProductInStock($product)) {
             //// If the product was published within the newness time frame display the new badge /////
             echo '<span class="gf-sticker gf-sticker--new ' . $class . '"><img src="' . $this->options['image_select_new'] . '" alt="New Product Sticker" width="54" height="54"></span>';
         }
