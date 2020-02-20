@@ -3,6 +3,7 @@ jQuery(document).ready(function ($) {
         var sliderNameData = null;
         $(".sortable").sortable();
         $(".sortable").disableSelection();
+
         $('#slider-add-button').click(function (e) {
             var sliderNameData = $('.slider-name-input').val().replace(/\s+/g, '-');
             var sliderName =  $('.slider-name-input').val();
@@ -21,11 +22,13 @@ jQuery(document).ready(function ($) {
                 template.querySelector('.slider-wrapper').dataset.sliderName = sliderNameData;
 
                 var container = document.querySelector('#forms-container');
-                container.on('load', '.sortable', function () {
-                    console.log('caooooo');
-                    $(".sortable").sortable();
-                    $(".sortable").disableSelection();
-                });
+                // if (container) {
+                //     container.on('load', '.sortable', function () {
+                //         console.log('caooooo');
+                //         $(".sortable").sortable();
+                //         $(".sortable").disableSelection();
+                //     });
+                // }
                 container.appendChild(template);
             } else {
                 console.error('Your browser does not support templates');
