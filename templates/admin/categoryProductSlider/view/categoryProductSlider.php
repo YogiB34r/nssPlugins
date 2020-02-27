@@ -34,6 +34,9 @@ $cats = get_terms('product_cat', $args);
                     class="btn btn-primary"><?php _e('Add slider', 'gfShopTheme'); ?></button>
         </div>
     </div>
+    <style>
+        .slider-wrapper .content {display: none}
+    </style>
     <form method="post" class="container-fluid" action="options.php">
         <?php settings_fields('gf_category_product_slider_options'); ?>
         <?php do_settings_sections('gf_category_product_slider_options'); ?>
@@ -106,9 +109,9 @@ $cats = get_terms('product_cat', $args);
 
 <template id="image-template">
     <li class="list-inline-item">
-        <h5 class="product-title"></h5>
+        <p class="product-title"></p>
         <div class="image-preview-wrapper">
-            <img class="image-preview" src="" alt="" height="200px" width="200px">
+            <img class="image-preview" src="" alt="" height="150px" width="150px">
             <button class="remove-image btn btn-danger">&times</button>
         </div>
         <input class="product-id-input" type="hidden" value="">

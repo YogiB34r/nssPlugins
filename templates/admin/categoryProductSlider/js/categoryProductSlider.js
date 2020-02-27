@@ -3,7 +3,6 @@ jQuery(document).ready(function ($) {
         var sliderNameData = null;
         $(".sortable").sortable();
         $(".sortable").disableSelection();
-
         $('#slider-add-button').click(function (e) {
             var sliderNameData = $('.slider-name-input').val().replace(/\s+/g, '-');
             var sliderName =  $('.slider-name-input').val();
@@ -22,16 +21,13 @@ jQuery(document).ready(function ($) {
                 template.querySelector('.slider-wrapper').dataset.sliderName = sliderNameData;
 
                 var container = document.querySelector('#forms-container');
-                // if (container) {
-                //     container.on('load', '.sortable', function () {
-                //         console.log('caooooo');
-                //         $(".sortable").sortable();
-                //         $(".sortable").disableSelection();
-                //     });
-                // }
-                container.appendChild(template);
+                jQuery('#forms-container').on('load', '.sortable', function () {
+                    $(".sortable").sortable();
+                    $(".sortable").disableSelection();
+                });
+                container.append(template);
             } else {
-                console.error('Your browser does not support templates');
+                alert('Your browser does not support templates');
             }
         }
 
@@ -39,19 +35,23 @@ jQuery(document).ready(function ($) {
             var container = document.querySelector('.product-list-' + sliderNameData);
             var productCounter = Number(container.dataset.productCount);
             $.get('/back-ajax/?action=findBySku&sku=' + $(obj).parent().find('input').val(), function (JSON) {
-                if ('content' in document.createElement('template')) {
-                    var template = document.querySelector('#image-template').content.cloneNode(true);
-                    template.querySelector('.product-title').innerText = JSON.title;
-                    template.querySelector('.image-preview').src = JSON.imageSrc;
-                    template.querySelector('.product-id-input').name = 'gf_category_product_slider_options[sliders][' + sliderName + '][products][' + productCounter + '][id]';
-                    template.querySelector('.product-id-input').value = JSON.id;
-                    productCounter++;
+                if (JSON) {
+                    if ('content' in document.createElement('template')) {
+                        var template = document.querySelector('#image-template').content.cloneNode(true);
+                        template.querySelector('.product-title').innerText = JSON.title;
+                        template.querySelector('.image-preview').src = JSON.imageSrc;
+                        template.querySelector('.product-id-input').name = 'gf_category_product_slider_options[sliders][' + sliderName + '][products][' + productCounter + '][id]';
+                        template.querySelector('.product-id-input').value = JSON.id;
+                        productCounter++;
 
-                    container.dataset.productCount = String(productCounter);
-                    container.appendChild(template);
+                        container.dataset.productCount = String(productCounter);
+                        container.appendChild(template);
 
+                    } else {
+                        alert('Your browser does not support templates');
+                    }
                 } else {
-                    console.error('Your browser does not support templates');
+                    alert('Proizvod nije pronadjen.');
                 }
             }, 'JSON');
         }
@@ -79,15 +79,25 @@ jQuery(document).ready(function ($) {
 
         $(document).on('change', '.categorySelect', function () {
             let catLink = $(this).children("option:selected").data('cat-slug');
-            $(this).parent().parent().find('.linkInput').val(catLink);
+            $(this).parent().parent().parent().find('.linkInput').val(catLink);
         });
 
         $(document).on('click', '.addProduct', function (e) {
             e.preventDefault();
-            let sliderNameData = $(this).parent().parent().parent().data('sliderName');
-            let sliderName = $(this).parent().parent().parent().find('.slider-heading').text().replace('Slider title: ','');
+            let sliderNameData = $(this).parent().parent().parent().parent().data('sliderName');
+            let sliderName = $(this).parent().parent().parent().parent().find('.slider-heading').text().replace('Slider title: ','');
             let obj = $(this);
             printProduct(sliderNameData, obj, sliderName);
-        })
+        });
+
+        $(document).on('click', '.slider-heading', function(e) {
+            var element = $(this).parents('.slider-wrapper').find('.content');
+            if (element.hasClass('active')) {
+                element.removeClass('active').hide(300);
+            } else {
+                $('#forms-container .slider-wrapper .content').hide(300);
+                $(this).parents('.slider-wrapper').find('.content').show(300).addClass('active');
+            }
+        });
     }
 });
