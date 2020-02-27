@@ -4,6 +4,9 @@ $sliderTitle = $data['slider'];
 $options = get_option('gf_category_product_slider_options')['sliders'][$sliderTitle];
 $categoryLink = $options['category']['link'];
 $categoryId = $options['category']['id'];
+if (!isset($options['products'])) {
+    return;
+}
 $productIds = array_column($options['products'],'id');
 $itemLimit = 16;
 if (wp_is_mobile()) {
