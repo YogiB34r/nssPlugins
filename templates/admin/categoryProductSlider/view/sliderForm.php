@@ -3,7 +3,7 @@ $sliderName = $data['sliderName'];
 $sliderNameData = str_replace(' ','-', $sliderName);
 $categoryId = $data['sliderData']['category']['id'];
 $categoryLink = $data['sliderData']['category']['link'];
-$products = $data['sliderData']['products'];
+$products = isset($data['sliderData']['products']) ? $data['sliderData']['products'] : [];
 $cats = $data['categories'];
 ?>
 <li class="slider-wrapper" data-slider-name="<?=$sliderNameData?>">
