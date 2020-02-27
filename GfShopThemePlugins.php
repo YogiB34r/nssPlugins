@@ -9,7 +9,7 @@ Version: 1.0.0
 */
 
 namespace GfPluginsCore;
-define('PLUGIN_DIR_URI',plugin_dir_url( __DIR__ . '/gfShopThemePlugins/'));
+define('PLUGIN_DIR_URI', plugin_dir_url('') . basename(__DIR__) . '/');
 define('PLUGIN_DIR', __DIR__ . '/');
 //loader for helper classes for theme and plugins
 

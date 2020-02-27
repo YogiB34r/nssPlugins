@@ -3,7 +3,7 @@ $sliderName = $data['sliderName'];
 $sliderNameData = str_replace(' ','-', $sliderName);
 $categoryId = $data['sliderData']['category']['id'];
 $categoryLink = $data['sliderData']['category']['link'];
-$products = $data['sliderData']['products'];
+$products = isset($data['sliderData']['products']) ? $data['sliderData']['products'] : [];
 $cats = $data['categories'];
 ?>
 <li class="slider-wrapper" data-slider-name="<?=$sliderNameData?>">
@@ -46,12 +46,14 @@ $cats = $data['categories'];
     <h4><?=__('Products', 'gfShopTheme')?></h4>
 	<?php
 	$productCountWithData = 0;
-	foreach ( $data['sliderData']['products'] as $product ) {
-		if ( strlen( $product['id'] ) === 0 ) {
-			continue;
-		}
-		$productCountWithData ++;
-	}
+    if ( isset( $data['sliderData']['products'] ) && count( $data['sliderData']['products'] ) > 0 ) {
+        foreach ($data['sliderData']['products'] as $product) {
+            if (strlen($product['id']) === 0) {
+                continue;
+            }
+            $productCountWithData++;
+        }
+    }
 	?>
     <ul data-product-count="<?= $productCountWithData ?>"
         class="list-unstyled list-inline sortable product-list-<?= $sliderNameData?>">
@@ -67,9 +69,9 @@ $cats = $data['categories'];
 				$title = $product->get_title();
 				echo '
                 <li class="list-inline-item">
-                 <p class="product-title">'.$product->get_title().'</p>
+                 <h5 class="product-title">'.$product->get_title().'</h5>
                     <div class="image-preview-wrapper">
-                        <img class="image-preview" src="' . $imageSrc . '" alt="" height="100px" width="100px">
+                        <img class="image-preview" src="' . $imageSrc . '" alt="" height="200px" width="200px">
                         <button class="remove-image btn btn-danger">&times</button>
                     </div>
                           <input class="product-id-input" type="hidden" value="'.$product->get_id().'"

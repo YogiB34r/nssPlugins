@@ -106,9 +106,9 @@ $cats = get_terms('product_cat', $args);
 
 <template id="image-template">
     <li class="list-inline-item">
-        <p class="product-title"></p>
+        <h5 class="product-title"></h5>
         <div class="image-preview-wrapper">
-            <img class="image-preview" src="" alt="" height="100px" width="100px">
+            <img class="image-preview" src="" alt="" height="200px" width="200px">
             <button class="remove-image btn btn-danger">&times</button>
         </div>
         <input class="product-id-input" type="hidden" value="">
