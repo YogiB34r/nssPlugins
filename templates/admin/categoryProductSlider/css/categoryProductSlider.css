@@ -11,6 +11,12 @@
     padding-left: 0.4em;
     padding-right: 0.4em;
 }
+.list-inline-item :hover {
+    cursor: pointer;
+}
+.list-inline-item p {
+   font-weight: bold;
+}
 .slider-wrapper {
     border: 1px solid black;
     padding: 1em;

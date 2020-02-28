@@ -1,8 +1,8 @@
 <?php
 return [
 	'settingPage' => [
-		'pageTitle' => 'Category product slider',
-		'menuTitle' => 'Category product slider',
+		'pageTitle' => 'Slajder sa proizvodima',
+		'menuTitle' => 'Slajder sa proizvodima',
 		'capability' => 'manage_options',
 		'menuSlug' => 'gf_category_product_slider_options',
 		'template' => 'categoryProductSlider'

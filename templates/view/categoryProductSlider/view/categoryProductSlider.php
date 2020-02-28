@@ -1,7 +1,7 @@
 <?php
 $random_id = rand();
-$sliderTitle = $data['slider'];
-$options = get_option('gf_category_product_slider_options')['sliders'][$sliderTitle];
+$sliderTitle = $data['sliderTitle'];
+$options = $data['options'];
 $categoryLink = $options['category']['link'];
 $categoryId = $options['category']['id'];
 if (!isset($options['products'])) {
@@ -14,7 +14,8 @@ if (wp_is_mobile()) {
 }
 $args = array(
     'include' => $productIds,
-    'limit' => $itemLimit
+    'limit' => $itemLimit,
+    'orderby' => 'include'
 );
 $products = wc_get_products( $args );
 $stickers = new \GfPluginsCore\ProductStickers();
