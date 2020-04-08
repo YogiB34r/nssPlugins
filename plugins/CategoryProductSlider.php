@@ -23,12 +23,6 @@ class CategoryProductSlider extends WP_Widget
             array('description' => esc_html__('Product Slider Without Tabs', 'gf_widgets_domain'))
         );
         $this->cache = new GF_Cache();
-        $this->init();
-    }
-
-    private function init()
-    {
-
     }
 
     /**
