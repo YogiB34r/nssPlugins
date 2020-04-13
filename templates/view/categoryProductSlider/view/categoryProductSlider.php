@@ -12,12 +12,16 @@ $itemLimit = 16;
 if (wp_is_mobile()) {
     $itemLimit = 10;
 }
-$args = array(
-    'include' => $productIds,
-    'limit' => $itemLimit,
-    'orderby' => 'include'
-);
-$products = wc_get_products( $args );
+$productIds = array_slice($productIds, 0, $itemLimit);
+//$args = array(
+//    'include' => $productIds,
+//    'limit' => $itemLimit,
+//    'orderby' => 'include'
+//);
+//$products = wc_get_products( $args );
+global $metaCache;
+
+$products = $metaCache->getWcProductsByIds($productIds);
 $stickers = new \GfPluginsCore\ProductStickers();
 ?>
 <div id="<?php echo $random_id; ?>" class="gf-product-slider">

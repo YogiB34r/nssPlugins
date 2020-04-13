@@ -55,8 +55,14 @@ class CategoryProductSlider extends \WP_Widget
 
     private function generateBoxHtml($instance)
     {
-        $options = get_option('gf_category_product_slider_options')['sliders'][$instance['sliderSelect']];
-        // md5 will take care of refreshing cache upon change in ANY of the options :P
+        $options = get_option('gf_category_product_slider_options');
+
+//        if (!isset($options['sliders'][$instance['sliderSelect']])) {
+//            var_dump(array_keys($options['sliders']));
+//            die();
+//            echo 'Fali slajder : ' . $instance['sliderSelect'] . PHP_EOL;
+//        }
+        $options = $options['sliders'][$instance['sliderSelect']];
         $key = 'product-slider-without-tabs#' . md5(serialize($options));
         $html = $this->cache->redis->get($key);
 //        $html = false;
@@ -65,8 +71,7 @@ class CategoryProductSlider extends \WP_Widget
             GfShopThemePlugins::getTemplatePartials('view', 'categoryProductSlider', 'categoryProductSlider',
                 ['sliderTitle' => $instance['sliderSelect'], 'options' => $options]);
             $html = ob_get_clean();
-            // so we can cache forever
-            $this->cache->redis->set($key, $html);
+            $this->cache->redis->set($key, $html, 5 * 60);
         }
 
         return $html;
