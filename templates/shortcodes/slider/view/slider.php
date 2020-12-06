@@ -5,23 +5,36 @@ $imageWidth = $options['image_width'];
 $imageHeight = $options['image_height'];
 $images = $options['images'];
 $counter = 0;
-?>
 
+$cache = new GF_Cache();
+// md5 will take care of refreshing cache upon change in ANY of the options :P
+$cacheKey = 'image-slider#' . md5(serialize($options));
+$html = $cache->redis->get($cacheKey);
+if ($html === false) {
+    ob_start();
+?>
 <div id="carouselExample" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
         <?php foreach ($images as $image): ?>
-        <?php if($image['url'] === '') {  continue; } ?>
-            <li data-target="#carouselExample" data-slide-to="<?=$counter?>" class="<?php if ($counter === 0) { echo 'active'; }?>"></li>
+            <?php if ($image['url'] === '') {
+                continue;
+            } ?>
+            <li data-target="#carouselExample" data-slide-to="<?= $counter ?>" class="<?php if ($counter === 0) {
+                echo 'active';
+            } ?>"></li>
             <?php $counter++; ?>
         <?php endforeach; ?>
     </ol>
     <div class="carousel-inner">
         <?php $counter = 0; ?>
         <?php foreach ($images as $key => $image): ?>
-        <?php if($image['url'] === '') continue; ?>
-            <div class="carousel-item <?php if ($counter === 0) { echo 'active'; }?>">
-                <a href="<?= $image['linkTo'] ?>" >
-                    <img class="d-block w-100" src="<?= $image['url'] ?>" alt="Nonstopshop" width="<?=$imageWidth?>" height="auto">
+            <?php if ($image['url'] === '') continue; ?>
+            <div class="carousel-item <?php if ($counter === 0) {
+                echo 'active';
+            } ?>">
+                <a href="<?= $image['linkTo'] ?>">
+                    <img class="d-block w-100" src="<?= $image['url'] ?>" alt="Nonstopshop"
+                         width="<?= $imageWidth ?>" height="auto">
                 </a>
             </div>
             <?php $counter++; ?>
@@ -37,4 +50,8 @@ $counter = 0;
         <span class="sr-only">Sledeći</span>
     </a>
 </div>
-
+<?php
+    $html = ob_get_clean();
+    $cache->redis->set($cacheKey, $html);
+}
+echo $html;

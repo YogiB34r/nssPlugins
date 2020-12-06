@@ -1,12 +1,11 @@
 <?php
 
-
 namespace GfPluginsCore;
 
-
 use GF_Cache;
+use WP_Widget;
 
-class CategoryProductSlider extends \WP_Widget
+class CategoryProductSlider extends WP_Widget
 {
     /**
      * @var GF_Cache
@@ -24,12 +23,6 @@ class CategoryProductSlider extends \WP_Widget
             array('description' => esc_html__('Product Slider Without Tabs', 'gf_widgets_domain'))
         );
         $this->cache = new GF_Cache();
-        $this->init();
-    }
-
-    private function init()
-    {
-
     }
 
     /**
@@ -47,7 +40,7 @@ class CategoryProductSlider extends \WP_Widget
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
 
-        if (isset($instance['sliderSelect']) and !empty($instance['sliderSelect'])) {
+        if (isset($instance['sliderSelect']) && !empty($instance['sliderSelect'])) {
             echo $this->generateBoxHtml($instance);
         }
 
@@ -58,17 +51,27 @@ class CategoryProductSlider extends \WP_Widget
 
     private function generateBoxHtml($instance)
     {
-        $key = 'product-slider-without-tabs#' . serialize($instance);
-        $html = $this->cache->redis->get($key);
-        $html = false;
-        if ($html === false) {
-            ob_start();
-            GfShopThemePlugins::getTemplatePartials('view', 'categoryProductSlider', 'categoryProductSlider', ['slider' => $instance['sliderSelect']]);
-            $html = ob_get_clean();
-            $this->cache->redis->set($key, $html);
+        if (isset(get_option('gf_category_product_slider_options')['sliders'][$instance['sliderSelect']])) {
+            $options = get_option('gf_category_product_slider_options')['sliders'][$instance['sliderSelect']];
+            // md5 will take care of refreshing cache upon change in ANY of the options :P
+            $key = 'product-slider-without-tabs#' . md5(serialize($options));
+            $html = $this->cache->redis->get($key);
+//        $html = false;
+            if ($html === false) {
+                ob_start();
+                GfShopThemePlugins::getTemplatePartials('view', 'categoryProductSlider', 'categoryProductSlider',
+                    ['sliderTitle' => $instance['sliderSelect'], 'options' => $options]);
+                $html = ob_get_clean();
+                // so we can cache forever
+                $this->cache->redis->set($key, $html);
+            }
+            return $html;
         }
 
-        return $html;
+        $instances = $this->get_settings();
+        unset($instances[$this->number]);
+        $this->save_settings($instances);
+        return '';
     }
 
     /**

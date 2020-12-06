@@ -1,8 +1,8 @@
 <?php
 return [
 	'settingPage' => [
-		'pageTitle' => 'Slider options',
-		'menuTitle' => 'Slider options',
+		'pageTitle' => 'Podešavanje slajdera',
+		'menuTitle' => 'Podešavanje slajdera',
 		'capability' => 'manage_options',
 		'menuSlug' => 'gf_slider_options',
 		'template' => 'slider'
