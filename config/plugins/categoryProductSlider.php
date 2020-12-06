@@ -4,7 +4,8 @@ return [
 		'pageTitle' => 'Slajder sa proizvodima',
 		'menuTitle' => 'Slajder sa proizvodima',
 		'capability' => 'manage_options',
-		'menuSlug' => 'gf_category_product_slider_options',
+//		'menuSlug' => 'gf_category_product_slider_options',
+		'menuSlug' => ' ',
 		'template' => 'categoryProductSlider'
 	],
 	'registerSettings' => [

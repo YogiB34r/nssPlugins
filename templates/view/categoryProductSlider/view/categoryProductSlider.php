@@ -1,27 +1,20 @@
 <?php
 $random_id = rand();
-$sliderTitle = $data['sliderTitle'];
 $options = $data['options'];
-$categoryLink = $options['category']['link'];
+$sliderTitle = $options['title'];
+$categoryLink = $options['category']['url'];
 $categoryId = $options['category']['id'];
-if (!isset($options['products'])) {
+if (!isset($options['productIds'])) {
     return;
 }
-$productIds = array_column($options['products'],'id');
+$productIds = $options['productIds'];
 $itemLimit = 16;
 if (wp_is_mobile()) {
     $itemLimit = 10;
 }
 $productIds = array_slice($productIds, 0, $itemLimit);
-//$args = array(
-//    'include' => $productIds,
-//    'limit' => $itemLimit,
-//    'orderby' => 'include'
-//);
-//$products = wc_get_products( $args );
-global $metaCache;
-
-$products = $metaCache->getWcProductsByIds($productIds);
+$metaCache = new \Gf\Util\MetaCache(new \GF_Cache());
+$products = wc_get_products(['include' => $productIds, 'orderby' => 'include', 'numberposts' => $itemLimit]);
 $stickers = new \GfPluginsCore\ProductStickers();
 ?>
 <div id="<?php echo $random_id; ?>" class="gf-product-slider">
@@ -38,13 +31,12 @@ $stickers = new \GfPluginsCore\ProductStickers();
     </div>
     <div class="slider-inner without-tabs">
         <?php
-
         /** @var WC_Product $product */
         foreach ($products as $product):?>
             <div class="slider-item">
-                <a href="<?=$product->get_permalink()?>" title="<?=$product->get_name()?>">
-                    <?= $stickers->addStickerToSaleProducts('',  $product->get_id()); ?>
-                    <?php if (has_post_thumbnail($product->get_id())) echo get_the_post_thumbnail($product->get_id(),[150, 150]); else echo '<img src="' . wc_placeholder_img_src() . '" alt="Placeholder" width="300px" height="300px" />'; ?>
+                <a href="<?=$metaCache->getMetaFor($product->get_id(), 'permalink', 'permalink', true)?>" title="<?=$product->get_name()?>">
+                    <?=$metaCache->getMetaFor($product->get_id(), 'saleSticker', 'saleSticker', true)?>
+                    <?=$metaCache->getMetaFor($product->get_id(), 'product', 'thumbnail', true) ?>
                     <h5><?= $product->get_name() ?></h5>
                     <span class="price"><?php echo $product->get_price_html(); ?></span>
                 </a>

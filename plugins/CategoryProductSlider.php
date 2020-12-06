@@ -21,12 +21,6 @@ class CategoryProductSlider extends \WP_Widget
             array('description' => esc_html__('Product Slider Without Tabs', 'gf_widgets_domain'))
         );
         $this->cache = new GF_Cache();
-        $this->init();
-    }
-
-    private function init()
-    {
-
     }
 
     /**
@@ -55,23 +49,22 @@ class CategoryProductSlider extends \WP_Widget
 
     private function generateBoxHtml($instance)
     {
-        $options = get_option('gf_category_product_slider_options');
-
-//        if (!isset($options['sliders'][$instance['sliderSelect']])) {
-//            var_dump(array_keys($options['sliders']));
-//            die();
-//            echo 'Fali slajder : ' . $instance['sliderSelect'] . PHP_EOL;
-//        }
-        $options = $options['sliders'][$instance['sliderSelect']];
-        $key = 'product-slider-without-tabs#' . md5(serialize($options));
+        $key = 'product-slider#' . md5(serialize($instance));
         $html = $this->cache->redis->get($key);
 //        $html = false;
         if ($html === false) {
+            $slider = getSlider($instance['sliderSelect'])[0];
+            $options = [
+                'category' => ['url' => $slider->url, 'id' => $slider->categoryId],
+                'productIds' => unserialize($slider->items),
+                'title' => $slider->title
+            ];
             ob_start();
             GfShopThemePlugins::getTemplatePartials('view', 'categoryProductSlider', 'categoryProductSlider',
                 ['sliderTitle' => $instance['sliderSelect'], 'options' => $options]);
             $html = ob_get_clean();
-            $this->cache->redis->set($key, $html, 5 * 60);
+
+            $this->cache->redis->set($key, $html, 60);
         }
 
         return $html;
@@ -86,22 +79,18 @@ class CategoryProductSlider extends \WP_Widget
      */
     public function form($instance)
     {
-        $options = get_option('gf_category_product_slider_options');
+        $sliders = getSliders();
         ?>
         <label for="<?php echo esc_attr($this->get_field_id('sliderSelect')); ?>">
             <?php _e('Select slider:', 'gfShopPlugins'); ?>
         </label>
-        <select
-                class="widefat"
-                id="<?php echo esc_attr($this->get_field_id('sliderSelect')); ?>"
+        <select class="widefat" id="<?php echo esc_attr($this->get_field_id('sliderSelect')); ?>"
                 name="<?php echo esc_attr($this->get_field_name('sliderSelect')); ?>">
-            <?php foreach ($options['sliders'] as $slider => $sliderData) : ?>
-                <option
-                    <?php if (isset($instance['sliderSelect'])) {
-                        if ($slider == $instance['sliderSelect']) {
+            <?php foreach ($sliders as $slider) : ?>
+                <option  value="<?=$slider->slideId?>"
+                    <?php if (isset($instance['sliderSelect']) && $slider->slideId == $instance['sliderSelect']) {
                             echo 'selected';
-                        }
-                    } ?> value="<?= $slider ?>"><?= $slider ?>
+                    } ?>><?=$slider->title?>
                 </option>
             <?php endforeach; ?>
         </select>

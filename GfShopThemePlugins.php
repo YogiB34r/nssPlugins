@@ -79,11 +79,14 @@ class GfShopThemePlugins {
 	}
 
 	private function addSubmenuPage( $pageTitle, $menuTitle, $capability, $menuSlug, $templateName ) {
-		$this->actionAdminMenu( function () use ( $pageTitle, $menuTitle, $capability, $menuSlug, $templateName ) {
-			add_submenu_page( 'nss-panel', $pageTitle, $menuTitle, $capability, $menuSlug, function () use ( $templateName ) {
-				$this->getTemplatePart( 'admin', $templateName );
-			} );
-		} );
+	    if (trim($menuSlug) !== '') {
+            $this->actionAdminMenu( function () use ( $pageTitle, $menuTitle, $capability, $menuSlug, $templateName ) {
+                add_submenu_page( 'nss-panel', $pageTitle, $menuTitle, $capability, $menuSlug, function () use ( $templateName ) {
+                    $this->getTemplatePart( 'admin', $templateName );
+                } );
+            } );
+        }
+
 
 		return $this;
 	}
