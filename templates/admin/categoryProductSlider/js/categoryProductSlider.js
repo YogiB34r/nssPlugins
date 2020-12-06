@@ -21,11 +21,13 @@ jQuery(document).ready(function ($) {
                 template.querySelector('.slider-wrapper').dataset.sliderName = sliderNameData;
 
                 var container = document.querySelector('#forms-container');
-                container.on('load', '.sortable', function () {
-                    console.log('caooooo');
-                    $(".sortable").sortable();
-                    $(".sortable").disableSelection();
-                });
+                // if (container) {
+                //     container.on('load', '.sortable', function () {
+                //         console.log('caooooo');
+                //         $(".sortable").sortable();
+                //         $(".sortable").disableSelection();
+                //     });
+                // }
                 container.appendChild(template);
             } else {
                 console.error('Your browser does not support templates');
