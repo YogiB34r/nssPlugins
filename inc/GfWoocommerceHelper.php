@@ -27,7 +27,7 @@ class GfWoocommerceHelper
      * @param $fragments
      * @return mixed
      */
-    public function updateCart($fragments)
+    public static function updateCart($fragments)
     {
 
         $fragments['span.header-cart-count'] = '<span class="header-cart-count">' . WC()->cart->get_cart_contents_count() . '</span>';
@@ -43,7 +43,7 @@ class GfWoocommerceHelper
      * @param $validation_errors
      * @todo implement validation for length and prevention of special characters
      */
-    public function validateExtraRegistrationData($username, $email, $validation_errors)
+    public static function validateExtraRegistrationData($username, $email, $validation_errors)
     {
         if (isset($_POST['billing_first_name']) && empty($_POST['billing_first_name'])) {
             $validation_errors->add('billing_first_name_error', __('Ime je obavezno polje!', 'gfShopTheme'));
@@ -69,7 +69,7 @@ class GfWoocommerceHelper
      * Updates user meta with custom fields woocommerce uses for customer user type
      * @param $customerId
      */
-    public function saveExtraRegistrationData($customerId)
+    public static function saveExtraRegistrationData($customerId)
     {
         if (isset($_POST['billing_first_name'])) {
             update_user_meta($customerId, 'billing_first_name', sanitize_text_field($_POST['billing_first_name']));
@@ -99,7 +99,7 @@ class GfWoocommerceHelper
      * @param $redirect
      * @return string
      */
-    public function redirectAfterLogin($redirect)
+    public static function redirectAfterLogin($redirect)
     {
         $redirect_page_id = url_to_postid($redirect);
         $checkout_page_id = wc_get_page_id('checkout');
@@ -116,7 +116,7 @@ class GfWoocommerceHelper
      * @param $redirect
      * @return string
      */
-    public function redirectAfterRegister($redirect)
+    public static function redirectAfterRegister($redirect)
     {
         return wc_get_page_permalink('myaccount');
     }

@@ -28,44 +28,55 @@ class ProductStickers
         add_action('woocommerce_before_single_product_summary', [$this, 'addStickersToNewProducts'], 10);
 
         //Sold out product stickers
-        add_action('woocommerce_before_shop_loop_item_title', [$this,'addStickerForSoldOutProducts'], 10);
-        add_action('woocommerce_before_single_product_summary', [$this,'addStickerForSoldOutProducts'], 1);
+        add_action('woocommerce_before_shop_loop_item_title', [$this, 'addStickerForSoldOutProducts'], 10);
+        add_action('woocommerce_before_single_product_summary', [$this, 'addStickerForSoldOutProducts'], 1);
 
         //Sale product stickers
         add_filter('woocommerce_sale_flash', [$this,'addStickerToSaleProducts'], 10, 3);
     }
 
 
-    public function addStickersToNewProducts($product = null)
+    public static function addStickersToNewProducts($product = null, $stockStatus = null, $productId = null)
     {
-        if (!is_object($product)) $product = wc_get_product(get_the_ID());
+        if (!is_object($product) && !$stockStatus) $product = wc_get_product(get_the_ID());
+        $options = get_option('gf_product_sticker_options');
 
-        if ($this->options['image_position_new'] === 'left') {
+        if ($options['image_position_new'] === 'left') {
             $class = 'gf-sticker--left';
-        } elseif ($this->options['image_position_new'] === 'center') {
+        } elseif ($options['image_position_new'] === 'center') {
             $class = 'gf-sticker--center';
         } else {
             $class = 'gf-sticker--right';
         }
 
-        $sale_sticker_to = (int)get_post_meta($product->get_id(), 'sale_sticker_to', true);
+
         $postdatestamp = strtotime(get_the_time('Y-m-d'));
         $newness = 15;
-        if ((time() - (60 * 60 * 24 * $newness)) < $postdatestamp && ($sale_sticker_to == 0) && $this->isProductInStock($product)) {
-            //// If the product was published within the newness time frame display the new badge /////
-            echo '<span class="gf-sticker gf-sticker--new ' . $class . '"><img src="' . $this->options['image_select_new'] . '" alt="New Product Sticker" width="54" height="54"></span>';
+        if ($stockStatus) {
+            $sale_sticker_to = (int) get_post_meta($productId, 'sale_sticker_to', true);
+            if ((time() - (60 * 60 * 24 * $newness)) < $postdatestamp && ($sale_sticker_to == 0)) {
+                //// If the product was published within the newness time frame display the new badge /////
+                echo '<span class="gf-sticker gf-sticker--new ' . $class . '"><img src="' . $options['image_select_new'] . '" alt="New Product Sticker" width="54" height="54"></span>';
+            }
+        } else {
+            $sale_sticker_to = (int) get_post_meta($product->get_id(), 'sale_sticker_to', true);
+            if ((time() - (60 * 60 * 24 * $newness)) < $postdatestamp && ($sale_sticker_to == 0) && static::isProductInStock($product)) {
+                //// If the product was published within the newness time frame display the new badge /////
+                echo '<span class="gf-sticker gf-sticker--new ' . $class . '"><img src="' . $options['image_select_new'] . '" alt="New Product Sticker" width="54" height="54"></span>';
+            }
         }
     }
 
-    public function addStickerForSoldOutProducts($classes = null, $stockStatus = null)
+    public static function addStickerForSoldOutProducts($classes = null, $stockStatus = null)
     {
         if (isset($stockStatus) && $stockStatus === 1) {
             return '';
         }
+        $options = get_option('gf_product_sticker_options');
 
-        if ($this->options['image_position_soldout'] === 'right') {
+        if ($options['image_position_soldout'] === 'right') {
             $class = 'gf-sticker--right';
-        } elseif ($this->options['image_position_soldout'] === 'left') {
+        } elseif ($options['image_position_soldout'] === 'left') {
             $class = 'gf-sticker--left';
         } else {
             $class = 'gf-sticker--center';
@@ -73,7 +84,7 @@ class ProductStickers
         if (!is_product()) {
             $class .= " gf-sticker--loop-grid ";
         }
-        $html = '<span class="gf-sticker gf-sticker--soldout ' . $class . ' "><img src="' . $this->options['image_select_soldout'] . '" alt="" width="200" height="47"></span>';
+        $html = '<span id="'.$options['image_position_soldout'].'" class="gf-sticker gf-sticker--soldout ' . $class . ' "><img src="' . $options['image_select_soldout'] . '" alt="" width="200" height="47"></span>';
         
         if (isset($stockStatus) && $stockStatus === 0) {
             return $html;
@@ -82,7 +93,7 @@ class ProductStickers
             // single page, safe to use heavy queries
             if (is_product()) {
                 $product = wc_get_product(get_the_ID());
-                if (!$this->isProductInStock($product)) {
+                if (!static::isProductInStock($product)) {
                     echo $html;
                 }
                 return '';
@@ -94,7 +105,7 @@ class ProductStickers
         }
     }
 
-    public function addStickerToSaleProducts($classes, $id)
+    public static function addStickerToSaleProducts($classes, $id)
     {
 //        if ($this->options['image_position_sale_option'] === 'right') {
 //            $class = 'gf-sticker--right';
@@ -120,7 +131,7 @@ class ProductStickers
         return '';
     }
 
-    public function isProductInStock($product)
+    public static function isProductInStock(\WC_Product $product)
     {
         if (get_class($product) === \WC_Product_Variable::class) {
             foreach ($product->get_available_variations() as $variation) {
