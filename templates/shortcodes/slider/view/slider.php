@@ -1,7 +1,9 @@
 <?php
 $options = get_option('gf_slider_options')['sliders'][$data['name']];
+
 $speed = $options['slide_speed'];
-$handle = 'gf-front-js';
+
+$handle = 'nss-desktop-js';
 if(wp_is_mobile()){
     $handle = 'nss-mobile-js';
 }
